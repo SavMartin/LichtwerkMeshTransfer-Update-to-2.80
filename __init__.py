@@ -666,8 +666,13 @@ class DATA_OT_lichtwerk_meshtransfer_bind(bpy.types.Operator):
             dOriginalState_source = licDisableGeneratingModifiers(oSourceObject)
             dOriginalState_target = licDisableGeneratingModifiers(oTargetObject)
             
-            oDefMesh_target = oTargetObject.to_mesh(depsgraph=bpy.context.depsgraph, apply_modifiers=True)
-            oDefMesh_source = oSourceObject.to_mesh(depsgraph=bpy.context.depsgraph, apply_modifiers=True)
+            depsgraph = bpy.context.evaluated_depsgraph_get()
+            mesh_owner = oTargetObject.evaluated_get(depsgraph)
+            oDefMesh_target = mesh_owner.to_mesh()
+            
+            depsgraph = bpy.context.evaluated_depsgraph_get()
+            mesh_owner = oSourceObject.evaluated_get(depsgraph)
+            oDefMesh_source = mesh_owner.to_mesh())
             
             licEnableGeneratingModifiers(oSourceObject, dOriginalState_source)
             licEnableGeneratingModifiers(oTargetObject, dOriginalState_target)
